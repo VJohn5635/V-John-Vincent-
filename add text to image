@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.IO;
+using System.Web.UI;
+using System.Drawing;
+
+public partial class _Default : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        Image2.Visible = false;
+        string fileName = Guid.NewGuid() + Path.GetExtension(FU1.PostedFile.FileName);
+        Image upImage = Image.FromStream(FU1.PostedFile.InputStream);
+        using (Graphics g = Graphics.FromImage(upImage))
+        {
+
+            // For Transparent Watermark Text 
+            int opacity = 200; // range from 0 to 255
+
+            //SolidBrush brush = new SolidBrush(Color.Red);
+            int size = Convert.ToInt32(TextBox1.Text.Trim());
+            SolidBrush brush = new SolidBrush(Color.FromArgb(opacity, Color.Red));
+            Font font = new Font("rhinos rocks",size);
+            g.DrawString(txtWatermarkText.Text.Trim(), font, brush, new PointF(140, 135));
+            upImage.Save(Path.Combine(Server.MapPath("~/upload"), fileName));
+            Image1.ImageUrl = "~/upload" + "//" + fileName;
+        }
+    }
+}
